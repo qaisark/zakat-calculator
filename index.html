@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zakat Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-bg" aria-hidden="true"></div>
+
+    <main class="app-shell">
+      <header class="hero">
+        <div class="hero-top">
+          <div>
+            <h1>Zakat Calculator</h1>
+            <p class="subtitle">
+              Enter your current values, check Nisab, and calculate your payable
+              Zakat instantly.
+            </p>
+          </div>
+          <label class="currency-dock" aria-label="Currency selector">
+            <select id="currency">
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="PKR">PKR</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <section class="grid" aria-label="Zakat Calculator Form">
+        <article class="card">
+          <div class="card-head">
+            <h2>Assets</h2>
+            <button type="button" id="add-asset" class="ghost-btn">+ Add Asset</button>
+          </div>
+
+          <div id="asset-list" class="field-list">
+            <label class="field-row">
+              <span>Cash on Hand</span>
+              <input type="number" min="0" step="0.01" class="amount asset" placeholder="0.00" />
+            </label>
+            <label class="field-row">
+              <span>Bank Balances</span>
+              <input type="number" min="0" step="0.01" class="amount asset" placeholder="0.00" />
+            </label>
+            <label class="field-row">
+              <span>Gold Value</span>
+              <input type="number" min="0" step="0.01" class="amount asset" placeholder="0.00" />
+            </label>
+            <label class="field-row">
+              <span>Silver Value</span>
+              <input type="number" min="0" step="0.01" class="amount asset" placeholder="0.00" />
+            </label>
+            <label class="field-row">
+              <span>Investments</span>
+              <input type="number" min="0" step="0.01" class="amount asset" placeholder="0.00" />
+            </label>
+            <label class="field-row">
+              <span>Business Inventory</span>
+              <input type="number" min="0" step="0.01" class="amount asset" placeholder="0.00" />
+            </label>
+            <label class="field-row">
+              <span>Money Owed to You</span>
+              <input type="number" min="0" step="0.01" class="amount asset" placeholder="0.00" />
+            </label>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h2>Liabilities</h2>
+            <button type="button" id="add-liability" class="ghost-btn">+ Add Liability</button>
+          </div>
+
+          <div id="liability-list" class="field-list">
+            <label class="field-row">
+              <span>Immediate Debts</span>
+              <input type="number" min="0" step="0.01" class="amount liability" placeholder="0.00" />
+            </label>
+            <label class="field-row">
+              <span>Bills Due Now</span>
+              <input type="number" min="0" step="0.01" class="amount liability" placeholder="0.00" />
+            </label>
+            <label class="field-row">
+              <span>Other Short-Term Payables</span>
+              <input type="number" min="0" step="0.01" class="amount liability" placeholder="0.00" />
+            </label>
+          </div>
+        </article>
+
+        <article class="card settings-card">
+          <h2>Nisab Settings</h2>
+
+          <label class="field-row inline">
+            <span>Nisab Basis</span>
+            <select id="nisab-basis">
+              <option value="gold">Gold (87.48g)</option>
+              <option value="silver">Silver (612.36g)</option>
+            </select>
+          </label>
+
+          <label class="field-row inline">
+            <span>Gold Price / gram</span>
+            <input id="gold-price" type="number" min="0" step="0.01" value="70" />
+          </label>
+
+          <label class="field-row inline">
+            <span>Silver Price / gram</span>
+            <input id="silver-price" type="number" min="0" step="0.01" value="0.9" />
+          </label>
+
+          <p class="hint">
+            Default Zakat rate is 2.5% on net assets above Nisab. Currency selection also updates
+            default gold/silver rates.
+          </p>
+        </article>
+
+        <article class="card action-card">
+          <button type="button" id="calculate" class="primary-btn primary-cta">Calculate Zakat</button>
+        </article>
+
+        <article class="card result-card" aria-live="polite">
+          <h2>Results</h2>
+          <div class="results">
+            <div class="result-row">
+              <span>Total Assets</span>
+              <strong id="total-assets">0.00</strong>
+            </div>
+            <div class="result-row">
+              <span>Total Liabilities</span>
+              <strong id="total-liabilities">0.00</strong>
+            </div>
+            <div class="result-row">
+              <span>Net Zakatable Amount</span>
+              <strong id="net-amount">0.00</strong>
+            </div>
+            <div class="result-row">
+              <span>Nisab Threshold</span>
+              <strong id="nisab-threshold">0.00</strong>
+            </div>
+            <div class="result-row status-row">
+              <span>Status</span>
+              <strong id="status">Not Calculated</strong>
+            </div>
+            <div class="result-row payable-row">
+              <span>Zakat Payable (2.5%)</span>
+              <strong id="zakat-payable">0.00</strong>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <details class="method-note">
+        <summary>How this calculator computes Zakat</summary>
+        <div class="method-content">
+          <p>
+            This calculator follows a straightforward educational method and does not store your data.
+            It computes your payable Zakat as follows:
+          </p>
+          <ol>
+            <li>Add all entered assets to get <strong>Total Assets</strong>.</li>
+            <li>Add all entered liabilities due now to get <strong>Total Liabilities</strong>.</li>
+            <li>
+              Compute <strong>Net Zakatable Amount</strong> as:
+              <code>max(Total Assets - Total Liabilities, 0)</code>.
+            </li>
+            <li>
+              Compute <strong>Nisab Threshold</strong> from selected basis:
+              <code>87.48 × gold price/gram</code> or <code>612.36 × silver price/gram</code>.
+            </li>
+            <li>
+              If Net Zakatable Amount is greater than or equal to Nisab Threshold, Zakat is due.
+            </li>
+            <li>
+              When due, <strong>Zakat Payable</strong> is calculated as:
+              <code>Net Zakatable Amount × 0.025</code> (2.5%).
+            </li>
+          </ol>
+          <p>
+            Important: Scholarly differences exist on details (for example, gold vs silver Nisab basis,
+            treatment of specific assets, and timing over one lunar year). For personal rulings, consult
+            a qualified scholar.
+          </p>
+          <p><strong>References used for this implementation:</strong></p>
+          <ul>
+            <li>
+              <a href="https://islamic-relief.org/nisab/" target="_blank" rel="noopener noreferrer">
+                Islamic Relief - Nisab (87.48g gold, 612.36g silver)
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://nzf.org.uk/knowledge/who-has-to-pay-zakat/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                National Zakat Foundation (NZF) - Who has to pay Zakat (2.5% and Nisab eligibility)
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://islamic-relief.org/zakat-calculator/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Islamic Relief - Zakat Calculator methodology overview
+              </a>
+            </li>
+          </ul>
+        </div>
+      </details>
+    </main>
+
+    <template id="custom-field-template">
+      <div class="custom-field-row">
+        <input
+          type="text"
+          class="label-input"
+          maxlength="40"
+          placeholder="Custom item label"
+          aria-label="Custom item label"
+        />
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          class="amount"
+          placeholder="0.00"
+          aria-label="Custom item amount"
+        />
+        <button type="button" class="remove-btn" aria-label="Remove field">Remove</button>
+      </div>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
